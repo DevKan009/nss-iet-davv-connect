@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowRight } from 'lucide-react';
+import { ArrowRight, Sparkles, Calendar, Heart } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { client } from '@/lib/sanityClient';
 import { queries } from '@/lib/queries';
@@ -30,57 +30,84 @@ const Index = () => {
     fetchData();
   }, []);
 
+  const fadeInUp = {
+    initial: { opacity: 0, y: 30 },
+    whileInView: { opacity: 1, y: 0 },
+    viewport: { once: true },
+    transition: { duration: 0.6, ease: "easeOut" }
+  };
+
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-screen flex flex-col bg-background overflow-x-hidden">
       <Header />
       
       <main className="flex-1">
         <HeroSlider />
-        <StatsBar />
+        <div className="relative z-20 -mt-10 md:-mt-20">
+          <StatsBar />
+        </div>
 
         {/* Mission Section */}
-        <section className="py-28 md:py-40 bg-background relative overflow-hidden gradient-mesh">
-          <div className="absolute inset-0 bg-gradient-to-b from-muted/50 via-background to-muted/30"></div>
+        <section className="py-24 md:py-32 relative overflow-hidden">
+          <div className="absolute inset-0 gradient-mesh opacity-60"></div>
           <div className="container mx-auto px-4 md:px-8 relative z-10">
             <div className="max-w-5xl mx-auto">
               <motion.div 
-                initial={{ opacity: 0, y: 40 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8 }}
-                viewport={{ once: true }}
+                {...fadeInUp}
                 className="text-center mb-16"
               >
-                <motion.span 
-                  initial={{ opacity: 0, scale: 0.8 }}
-                  whileInView={{ opacity: 1, scale: 1 }}
-                  transition={{ delay: 0.2, duration: 0.6, type: "spring", bounce: 0.4 }}
-                  className="inline-block px-6 py-3 glass-effect text-primary rounded-full text-base font-bold mb-8 border-2 border-primary/20 uppercase tracking-widest"
-                >
-                  ✨ OUR MISSION
-                </motion.span>
-                <h2 className="font-heading text-5xl md:text-7xl font-extrabold mb-8 bg-gradient-to-r from-primary via-nss-purple to-accent bg-clip-text text-transparent leading-tight">
-                  Building Tomorrow's Leaders
+                <div className="flex justify-center mb-6">
+                  <span className="px-4 py-1.5 rounded-full bg-primary/10 text-primary text-sm font-bold uppercase tracking-wider flex items-center gap-2 border border-primary/20">
+                    <Sparkles className="w-4 h-4" />
+                    Our Mission
+                  </span>
+                </div>
+                <h2 className="font-heading text-4xl md:text-6xl lg:text-7xl font-bold mb-6 tracking-tight">
+                  Building Tomorrow's <br/>
+                  <span className="gradient-text">Leaders Today</span>
                 </h2>
+                <p className="text-xl text-muted-foreground leading-relaxed max-w-3xl mx-auto">
+                  We empower students to become responsible citizens through active community service. 
+                  Fostering leadership, empathy, and positive social change.
+                </p>
               </motion.div>
+
               <motion.div 
-                initial={{ opacity: 0, y: 40 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.3, duration: 0.8 }}
+                initial={{ opacity: 0, scale: 0.95 }}
+                whileInView={{ opacity: 1, scale: 1 }}
                 viewport={{ once: true }}
-                className="relative"
+                transition={{ duration: 0.7 }}
+                className="relative group"
               >
-                <div className="absolute -inset-4 bg-gradient-primary rounded-[2.5rem] opacity-10 blur-2xl"></div>
-                <div className="relative glass-effect rounded-[2rem] p-10 md:p-16 shadow-2xl border-2 border-white/20">
-                  <p className="text-xl md:text-2xl text-foreground leading-relaxed text-center mb-10 font-medium">
-                    The National Service Scheme at IET DAVV is committed to developing students' 
-                    personality through community service. We believe in fostering social responsibility, 
-                    leadership, and creating positive change through meaningful action.
-                  </p>
-                  <div className="text-center">
-                    <Button asChild size="lg" variant="default">
+                <div className="absolute -inset-1 bg-gradient-primary rounded-[2.5rem] opacity-20 blur-xl group-hover:opacity-40 transition duration-1000"></div>
+                <div className="relative glass-card rounded-[2rem] p-8 md:p-16 text-center border-white/60">
+                  <div className="grid md:grid-cols-3 gap-8 md:gap-12 items-center">
+                    <div className="space-y-4">
+                      <div className="w-16 h-16 mx-auto bg-primary/10 rounded-2xl flex items-center justify-center text-primary">
+                        <Heart className="w-8 h-8" />
+                      </div>
+                      <h3 className="font-heading text-xl font-bold">Community Service</h3>
+                      <p className="text-muted-foreground">Selfless dedication to society welfare.</p>
+                    </div>
+                    <div className="space-y-4 md:scale-110">
+                      <div className="w-20 h-20 mx-auto bg-accent/10 rounded-2xl flex items-center justify-center text-accent">
+                        <Sparkles className="w-10 h-10" />
+                      </div>
+                      <h3 className="font-heading text-2xl font-bold">Leadership</h3>
+                      <p className="text-muted-foreground">Developing skills to lead with purpose.</p>
+                    </div>
+                    <div className="space-y-4">
+                      <div className="w-16 h-16 mx-auto bg-nss-red/10 rounded-2xl flex items-center justify-center text-nss-red">
+                        <Calendar className="w-8 h-8" />
+                      </div>
+                      <h3 className="font-heading text-xl font-bold">Active Participation</h3>
+                      <p className="text-muted-foreground">Engaging in impactful regular events.</p>
+                    </div>
+                  </div>
+                  <div className="mt-12">
+                    <Button asChild size="lg" className="rounded-full px-8 text-base">
                       <Link to="/about">
-                        Learn More About Us
-                        <ArrowRight className="ml-2 h-5 w-5" />
+                        Discover Our Story <ArrowRight className="ml-2 h-5 w-5" />
                       </Link>
                     </Button>
                   </div>
@@ -91,46 +118,37 @@ const Index = () => {
         </section>
 
         {/* Upcoming Events */}
-        <section className="py-28 md:py-40 bg-muted/30 relative overflow-hidden">
-          <div className="absolute top-0 left-0 w-96 h-96 bg-accent/5 rounded-full blur-3xl"></div>
+        <section className="py-24 bg-secondary/30 relative">
           <div className="container mx-auto px-4 md:px-8 relative z-10">
             <motion.div 
-              initial={{ opacity: 0, y: 40 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8 }}
-              viewport={{ once: true }}
-              className="text-center mb-20"
+              {...fadeInUp}
+              className="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-6"
             >
-              <motion.span 
-                initial={{ opacity: 0, scale: 0.8 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                transition={{ delay: 0.2, duration: 0.6, type: "spring", bounce: 0.4 }}
-                className="inline-block px-6 py-3 glass-effect text-accent rounded-full text-base font-bold mb-8 border-2 border-accent/20 uppercase tracking-widest"
-              >
-                🎯 WHAT'S HAPPENING
-              </motion.span>
-              <h2 className="font-heading text-5xl md:text-7xl font-extrabold mb-8">Upcoming Events</h2>
-              <p className="text-xl md:text-2xl text-muted-foreground max-w-3xl mx-auto font-medium">
-                Join us in making a difference in our community
-              </p>
+              <div className="max-w-2xl">
+                <span className="text-accent font-bold tracking-wider uppercase mb-2 block">What's Happening</span>
+                <h2 className="font-heading text-4xl md:text-5xl font-bold">Upcoming Events</h2>
+              </div>
+              <Button asChild variant="outline" className="rounded-full border-2 hover:bg-background">
+                <Link to="/events">View All Events <ArrowRight className="ml-2 w-4 h-4" /></Link>
+              </Button>
             </motion.div>
 
             {loading ? (
-              <div className="text-center py-12">
-                <p className="text-muted-foreground text-lg font-bold">Loading events...</p>
+              <div className="text-center py-20 bg-muted/50 rounded-3xl">
+                <p className="text-muted-foreground font-medium">Loading events...</p>
               </div>
             ) : events.length === 0 ? (
-              <div className="text-center py-12">
-                <p className="text-muted-foreground text-lg font-bold">No upcoming events at the moment.</p>
+              <div className="text-center py-20 bg-muted/50 rounded-3xl">
+                <p className="text-muted-foreground font-medium">No upcoming events scheduled.</p>
               </div>
             ) : (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
-                {events.slice(0, 6).map((event, index) => (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                {events.slice(0, 3).map((event, index) => (
                   <motion.div
                     key={event._id}
-                    initial={{ opacity: 0, y: 40 }}
+                    initial={{ opacity: 0, y: 30 }}
                     whileInView={{ opacity: 1, y: 0 }}
-                    transition={{ delay: index * 0.1, duration: 0.6 }}
+                    transition={{ delay: index * 0.1, duration: 0.5 }}
                     viewport={{ once: true }}
                   >
                     <EventCard event={event} />
@@ -138,56 +156,35 @@ const Index = () => {
                 ))}
               </div>
             )}
-
-            <motion.div 
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.4, duration: 0.6 }}
-              viewport={{ once: true }}
-              className="text-center mt-16"
-            >
-              <Button asChild variant="default" size="lg">
-                <Link to="/events">
-                  View All Events
-                  <ArrowRight className="ml-2 h-5 w-5" />
-                </Link>
-              </Button>
-            </motion.div>
           </div>
         </section>
 
-        {/* Call to Action */}
-        <section className="py-32 md:py-48 relative overflow-hidden">
-          <div className="absolute inset-0 gradient-hero"></div>
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(255,193,7,0.1),transparent_70%)]"></div>
-          <div className="container mx-auto px-4 md:px-8 text-center relative z-10">
+        {/* CTA Section */}
+        <section className="py-32 relative overflow-hidden">
+          <div className="absolute inset-0 bg-gradient-hero"></div>
+          <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10"></div>
+          
+          <div className="container mx-auto px-4 text-center relative z-10">
             <motion.div
-              initial={{ opacity: 0, y: 40 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8 }}
+              initial={{ opacity: 0, scale: 0.9 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.6 }}
               viewport={{ once: true }}
+              className="max-w-4xl mx-auto"
             >
-              <motion.div
-                initial={{ opacity: 0, scale: 0.8 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                transition={{ delay: 0.2, duration: 0.6, type: "spring", bounce: 0.4 }}
-                className="inline-block px-6 py-3 glass-effect text-accent rounded-full text-base font-bold mb-10 uppercase tracking-widest"
-              >
-                🚀 JOIN THE MOVEMENT
-              </motion.div>
-              <h2 className="font-heading text-5xl md:text-8xl font-extrabold mb-8 text-white leading-[0.9] drop-shadow-2xl">
-                Ready to Make<br/>a Difference?
+              <h2 className="font-heading text-5xl md:text-7xl font-black mb-8 text-white drop-shadow-sm tracking-tight leading-none">
+                Make an Impact. <br/> Join the Movement.
               </h2>
-              <p className="text-2xl md:text-3xl mb-16 text-white/95 max-w-4xl mx-auto leading-relaxed font-medium drop-shadow-lg">
-                Join us in our mission to serve the community and create lasting positive impact. 
-                Be part of something bigger than yourself.
+              <p className="text-xl md:text-2xl mb-10 text-white/90 font-medium max-w-2xl mx-auto">
+                Be part of a community that believes in the power of service. 
+                Your journey to changing the world starts here.
               </p>
-              <div className="flex flex-col sm:flex-row gap-6 justify-center">
-                <Button size="lg" variant="accent" className="text-lg">
-                  Join NSS Today
+              <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+                <Button size="lg" className="bg-white text-primary hover:bg-white/90 text-lg px-10 h-14 rounded-full shadow-xl hover:shadow-2xl transition-all hover:-translate-y-1">
+                  Become a Volunteer
                 </Button>
-                <Button size="lg" variant="outline" className="border-2 border-white text-white hover:bg-white hover:text-nss-slate text-lg backdrop-blur-sm bg-white/10">
-                  <Link to="/events">Explore Events</Link>
+                <Button size="lg" variant="outline" className="border-2 border-white text-white hover:bg-white/20 hover:text-white bg-transparent text-lg px-10 h-14 rounded-full backdrop-blur-sm">
+                  <Link to="/events">Explore Activities</Link>
                 </Button>
               </div>
             </motion.div>
@@ -201,3 +198,4 @@ const Index = () => {
 };
 
 export default Index;
+
