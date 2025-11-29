@@ -1,11 +1,13 @@
-import { useState } from 'react';
+
+import { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Menu, X } from 'lucide-react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 
 const Header = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
   const location = useLocation();
 
   const navigation = [
@@ -18,93 +20,101 @@ const Header = () => {
     { name: 'Downloads', href: '/downloads' },
   ];
 
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 20);
+    };
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
   const isActive = (href) => location.pathname === href;
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-border/40 glass-effect shadow-lg">
-      <nav className="container mx-auto flex h-24 items-center justify-between px-4 md:px-8">
+    <header 
+      className={`sticky top-0 z-50 w-full transition-all duration-300 ${
+        scrolled ? 'glass-effect border-b shadow-sm py-2' : 'bg-transparent py-4'
+      }`}
+    >
+      <nav className="container mx-auto flex items-center justify-between px-4 md:px-8">
         <Link to="/" className="flex items-center space-x-3 group">
-          <div className="p-3 rounded-2xl bg-gradient-primary shadow-lg shadow-primary/50 group-hover:shadow-xl group-hover:shadow-primary/70 group-hover:scale-110 transition-all duration-300">
-            <span className="text-primary-foreground font-heading font-extrabold text-2xl">NSS</span>
+          <div className="relative">
+            <div className="absolute inset-0 bg-gradient-primary rounded-xl blur-lg opacity-40 group-hover:opacity-60 transition-opacity"></div>
+            <div className="relative p-2.5 rounded-xl bg-gradient-primary shadow-lg group-hover:scale-105 transition-transform">
+              <span className="text-white font-heading font-black text-xl tracking-tighter">NSS</span>
+            </div>
           </div>
           <div className="hidden sm:block">
-            <div className="font-heading font-extrabold text-2xl bg-gradient-to-r from-primary via-nss-purple to-accent bg-clip-text text-transparent">
-              NSS IET DAVV
-            </div>
-            <div className="text-xs text-muted-foreground font-bold uppercase tracking-wider">National Service Scheme</div>
+            <div className="font-heading font-bold text-xl leading-none mb-0.5">IET DAVV</div>
+            <div className="text-[10px] text-muted-foreground font-bold uppercase tracking-widest">Connect</div>
           </div>
         </Link>
 
         {/* Desktop Navigation */}
-        <div className="hidden md:flex items-center space-x-1">
+        <div className="hidden lg:flex items-center space-x-1">
           {navigation.map((item) => (
             <Link
               key={item.name}
               to={item.href}
-              className={`relative px-5 py-2.5 text-sm font-bold rounded-2xl transition-all duration-300 uppercase tracking-wide ${
+              className={`relative px-4 py-2 text-sm font-semibold rounded-full transition-all duration-300 ${
                 isActive(item.href)
-                  ? 'text-primary bg-primary/15 shadow-md'
-                  : 'text-foreground hover:text-primary hover:bg-accent/15 hover:scale-105'
+                  ? 'text-primary bg-primary/10'
+                  : 'text-foreground/80 hover:text-primary hover:bg-secondary'
               }`}
             >
               {item.name}
-              {isActive(item.href) && (
-                <motion.span 
-                  layoutId="activeNav"
-                  className="absolute bottom-0 left-1/2 -translate-x-1/2 w-3/4 h-1 bg-gradient-primary rounded-full"
-                  transition={{ type: "spring", bounce: 0.3, duration: 0.6 }}
-                ></motion.span>
-              )}
             </Link>
           ))}
-          <Button variant="default" size="sm" className="ml-6">
-            Join Us
-          </Button>
+          <div className="pl-4 ml-2 border-l border-border">
+            <Button className="rounded-full shadow-primary hover:shadow-lg transition-all" size="sm">
+              Join Now
+            </Button>
+          </div>
         </div>
 
         {/* Mobile Menu Button */}
         <Button
           variant="ghost"
           size="icon"
-          className="md:hidden rounded-2xl hover:bg-accent/15 hover:scale-110 transition-all"
+          className="lg:hidden rounded-full hover:bg-secondary"
           onClick={() => setIsOpen(!isOpen)}
           aria-label="Toggle menu"
         >
-          {isOpen ? <X className="h-7 w-7 text-primary" /> : <Menu className="h-7 w-7 text-primary" />}
+          {isOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
         </Button>
       </nav>
 
       {/* Mobile Navigation */}
-      {isOpen && (
-        <motion.div 
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -20 }}
-          className="md:hidden border-t border-border/40 glass-effect shadow-2xl"
-        >
-          <div className="container mx-auto px-4 py-6 space-y-2">
-            {navigation.map((item) => (
-              <Link
-                key={item.name}
-                to={item.href}
-                onClick={() => setIsOpen(false)}
-                className={`block px-5 py-4 text-base font-bold transition-all duration-300 rounded-2xl uppercase tracking-wide ${
-                  isActive(item.href)
-                    ? 'bg-gradient-primary text-primary-foreground shadow-lg shadow-primary/50'
-                    : 'text-foreground hover:bg-accent/15 hover:text-primary hover:scale-105'
-                }`}
-              >
-                {item.name}
-              </Link>
-            ))}
-            <div className="pt-4">
-              <Button variant="default" size="sm" className="w-full">
-                Join Us
+      <AnimatePresence>
+        {isOpen && (
+          <motion.div 
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: "auto" }}
+            exit={{ opacity: 0, height: 0 }}
+            className="lg:hidden border-t bg-background/95 backdrop-blur-xl overflow-hidden"
+          >
+            <div className="container mx-auto px-4 py-6 flex flex-col gap-2">
+              {navigation.map((item) => (
+                <Link
+                  key={item.name}
+                  to={item.href}
+                  onClick={() => setIsOpen(false)}
+                  className={`px-4 py-3 text-lg font-semibold rounded-2xl transition-colors ${
+                    isActive(item.href)
+                      ? 'bg-primary/10 text-primary'
+                      : 'hover:bg-secondary text-foreground'
+                  }`}
+                >
+                  {item.name}
+                </Link>
+              ))}
+              <Button className="w-full mt-4 rounded-xl" size="lg">
+                Join NSS IET DAVV
               </Button>
             </div>
-          </div>
-        </motion.div>
-      )}
+          </motion.div>
+        )}
+      </AnimatePresence>
     </header>
   );
 };
