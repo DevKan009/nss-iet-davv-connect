@@ -1,7 +1,8 @@
 import { Link } from 'react-router-dom';
 import { Calendar, MapPin } from 'lucide-react';
-import { Card, CardContent, CardFooter } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { motion } from 'framer-motion';
 import Image from './Image';
 
 const formatDate = (dateString) => {
